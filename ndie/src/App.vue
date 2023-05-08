@@ -1,21 +1,17 @@
 <script setup lang="ts">
+import EpicWorker from '@/worker/index.js?worker';
+const worker = new EpicWorker();
+
 import ImageCanvas from '@/components/ImageCanvas.vue';
 import ImageInfo from '@/components/ImageInfo.vue';
 import { ref, computed, watch } from 'vue';
 
-import {
-    FilterType,
-    COMPONENTS,
-    DEFAULT_SETTINGS,
-    FRIENDLY_NAME,
-    type ExecutionStats,
-    type IFilter,
-} from '@/components/FilterComponents/filters';
+import { FilterType, type ExecutionStats, type IFilter } from '@/types';
+import { COMPONENTS, DEFAULT_SETTINGS, FRIENDLY_NAME } from '@/components/FilterComponents/filters';
 
 import IcDrag from '@/components/icons/ic-drag.vue';
 import IcDelete from '@/components/icons/ic-delete.vue';
 import Draggable from 'vuedraggable';
-
 const imageInfo = ref<typeof ImageInfo | null>(null);
 const imageCanvas = ref<typeof ImageCanvas | null>(null);
 
@@ -88,7 +84,7 @@ async function newImage(e: DragEvent) {
     sourceOrGraphChange();
 }
 
-const worker = new Worker(new URL('./worker', import.meta.url), { type: 'module' });
+// const worker = new Worker(new URL('./worker/index.ts', import.meta.url), { type: 'module' });
 const workerBusy = ref(false);
 
 watch(filters.value, () => {

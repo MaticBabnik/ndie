@@ -4,13 +4,7 @@
 declare const self: ServiceWorkerGlobalScope;
 
 import { LibF, LibFMode } from './libfilter';
-import { FilterType } from '@/components/FilterComponents/filters';
-
-interface IFilter {
-    id: number;
-    type: FilterType;
-    params: Object;
-}
+import { FilterType, type IFilter, type ExecutionStats } from '@/types';
 
 type GausianSize = 3 | 5 | 7;
 interface JSKernel {
@@ -85,11 +79,6 @@ function getGaussianKernel(libf: LibF, size: number) {
     const kd = GAUSSIAN_BLUR[size as GausianSize] ?? GAUSSIAN_BLUR[3];
 
     return libf.createKernel(kd.kernel.length, kd.mul, kd.kernel);
-}
-
-interface ExecutionStats {
-    filter: string;
-    time: number;
 }
 
 interface ValueArgs {

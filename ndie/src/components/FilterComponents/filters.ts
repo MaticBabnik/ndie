@@ -1,4 +1,5 @@
 import type { Component } from 'vue';
+import { FilterType, type ExecutionStats, type IFilter } from '@/types';
 
 import NoParams from './NoParams.vue';
 import ThresholdParams from './ThresholdParams.vue';
@@ -12,24 +13,6 @@ import PixelateParams from './PixelateParams.vue';
 import BitcrushParams from './BitcrushParams.vue';
 import NoiseParams from './NoiseParams.vue';
 import CustomKernelParams from './CustomKernelParams.vue';
-
-export enum FilterType {
-    Grayscale = 'grayscale',
-    Invert = 'invert',
-    Threshold = 'threshold',
-    HsvAdjust = 'hsv-adjust',
-    LinearBrightness = 'linear-brightness',
-    GammaCorrection = 'gamma',
-    Box = 'box',
-    Gaussian = 'gaussian',
-    Sobel = 'sobel',
-    Laplace = 'laplace',
-    UnsharpMask = 'unsharp-mask',
-    Kernel = 'kernel',
-    Pixelate = 'pixelate',
-    Noise = 'noise',
-    Bitcrush = 'bitcrush',
-}
 
 export const FRIENDLY_NAME: Record<FilterType, string> = {
     [FilterType.Grayscale]: 'Grayscale',
@@ -118,14 +101,3 @@ export const COMPONENTS: Record<FilterType, Component> = {
     [FilterType.Noise]: NoiseParams,
     [FilterType.Bitcrush]: BitcrushParams,
 };
-
-export interface ExecutionStats {
-    filter: string;
-    time: number;
-}
-
-export interface IFilter {
-    id: number;
-    type: FilterType;
-    params: Object;
-}
