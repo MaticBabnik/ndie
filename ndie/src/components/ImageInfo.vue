@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, type Ref, onMounted, onUnmounted, computed } from 'vue';
 
-import { type ExecutionStats } from '@/components/FilterComponents/filters';
+import { type ExecutionStats } from '@/types';
 const props = defineProps<{
     name: string;
     width: number;

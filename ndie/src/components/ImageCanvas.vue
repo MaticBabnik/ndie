@@ -1,49 +1,38 @@
 <script setup lang="ts">
 import { useMousePressed } from '@vueuse/core';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const MAX_SCALE = 10; // 1000%
 const MIN_SCALE = 0.1; // 5%
 
 const scale = ref(1);
 const cRef = ref<HTMLDivElement | null>(null);
-const imgRef = ref<HTMLImageElement | null>(null);
 const canvasRef = ref<HTMLDivElement | null>(null);
-
-const internalCanvas = document.createElement('canvas');
-const ctx = internalCanvas.getContext('2d', { willReadFrequently: true });
-if (!ctx) alert('Image CTX failed');
+const canv = ref<HTMLCanvasElement | null>(null);
+const ctx = computed(() => canv.value?.getContext('2d'));
 
 const url = ref('');
 
 function resize(w: number, h: number) {
-    internalCanvas.width = w;
-    internalCanvas.height = h;
+    if (!canv.value) return;
+    canv.value.width = w;
+    canv.value.height = h;
 }
 
 function putImageData(d: ImageData) {
-    ctx?.putImageData(d, 0, 0);
-    url.value = internalCanvas.toDataURL();
+    ctx.value?.putImageData(d, 0, 0);
 }
 
 function zoom(e: WheelEvent) {
-    if (!cRef.value || !canvasRef.value || !imgRef.value) return;
+    if (!cRef.value || !canvasRef.value || !canv.value) return;
     // const prevScale = scale.value
     scale.value += e.deltaY * -0.001;
     scale.value = Math.max(MIN_SCALE, Math.min(scale.value, MAX_SCALE));
 
-    const sImgW = Math.max(1, scale.value) * imgRef.value.width;
-    const sImgH = Math.max(1, scale.value) * imgRef.value.height;
+    const sImgW = Math.max(1, scale.value) * canv.value.width;
+    const sImgH = Math.max(1, scale.value) * canv.value.height;
     canvasRef.value.style.width = sImgW + 'px';
     canvasRef.value.style.height = sImgH + 'px';
-
-    // requestAnimationFrame(() => {
-    //     if (!cRef.value || !canvasRef.value || !imgRef.value) return
-    //     const containerRect = cRef.value.getBoundingClientRect()
-    //     const dx = (containerRect.width / 2) * (1 / prevScale - 1 / scale.value)
-    //     const dy = (containerRect.height / 2) * (1 / prevScale - 1 / scale.value)
-    //     cRef.value.scrollBy({ left: dx, top: dy })
-    // })
 }
 
 const a = useMousePressed({
@@ -84,12 +73,12 @@ onMounted(() => {});
 <template>
     <div class="container" @wheel.prevent="zoom" @mousemove="move" ref="cRef">
         <div class="canvas" ref="canvasRef">
-            <img
-                :src="url"
+            <canvas
+                ref="canv"
                 :class="{ pixelated: scale >= 4 }"
                 :style="`transform: scale(${scale})`"
-                ref="imgRef"
-            />
+            >
+            </canvas>
         </div>
     </div>
 </template>
@@ -111,7 +100,7 @@ onMounted(() => {});
         place-items: center;
         width: fit-content;
 
-        img {
+        canvas {
             pointer-events: none;
             &.pixelated {
                 image-rendering: pixelated;

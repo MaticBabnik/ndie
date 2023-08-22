@@ -266,7 +266,7 @@ LibF.get(LibFMode.WASM_SIMD).then((libf) => {
 
             stats.push({
                 filter: filter.type,
-                time: self.performance.now() - st,
+                time: ~~(self.performance.now() - st),
             });
         }
 
