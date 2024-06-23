@@ -48,7 +48,7 @@ jobs:
             - name: Build ndie
               run: |
                   cd ndie
-                  npm run generate
+                  npm run build
               shell: bash
 
             - name: Upload artifact
