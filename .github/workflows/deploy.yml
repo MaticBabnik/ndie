@@ -34,8 +34,8 @@ jobs:
                   mkdir -p libf/build
                   cd libf/build
                   source ../../emsdk/emsdk_env.sh
-                  emcmake cmake .. -G Ninja
-                  ninja
+                  emcmake cmake .. -G make
+                  make
                   cp libf.* ../../ndie/src/worker
               shell: bash
 
